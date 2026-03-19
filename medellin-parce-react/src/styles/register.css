@@ -1,0 +1,128 @@
+@font-face {
+    font-family: 'Alfa Slab One';
+    src: url(./AlfaSlabOne-Regular.ttf);
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #e2e2e2;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* MAIN ocupa el espacio disponible */
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* LOGIN / REGISTER CONTAINER */
+.login-container {
+    width: 400px;
+    padding: 30px;
+    background-color: #bcbebd; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 65px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+#logo img {
+    width: 255px; 
+    height: 150px; 
+    margin-bottom: 40px; 
+}
+
+h1 {
+    color: white;
+    margin-bottom: 40px;
+    font-size: large;
+    font-family: 'Helvetica', sans-serif;
+}
+
+/* INPUTS */
+#username,
+#password,
+#fullname,
+#email,
+#confirm-password {
+    width: 300px;
+    border-radius: 45px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 15px;
+    background-color: #D9D9D9;
+    text-align: center;
+    display: block; 
+    margin-left: auto; 
+    margin-right: auto; 
+}
+
+#username::placeholder,
+#password::placeholder,
+#fullname::placeholder,
+#email::placeholder,
+#confirm-password::placeholder {
+    color: #525250;
+    font-style: italic;
+    opacity: 0.7;
+}
+
+/* BOTÓN LOGIN */
+#login-button {
+    width: 150px;
+    height: 40px;
+    border-radius: 45px;
+    border: none;
+    background-color: #000000;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 20px auto; 
+    display: block;
+}
+#login-button:hover {
+    background-color: #424242;
+}
+
+/* BOTÓN REGISTRO */
+#register-button {
+    width: 150px;
+    height: 40px;
+    border-radius: 45px;
+    border: none;
+    background-color: #000000;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 20px auto; 
+    display: block;
+}
+#register-button:hover {
+    background-color: #424242;
+}
+
+/* TEXTO DE REGISTRO / LOGIN */
+.sincuenta {
+    color: white;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+/* FOOTER */
+footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+}
