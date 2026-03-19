@@ -26,6 +26,11 @@ class Usuario {
       return { success: true, message: "Registro exitoso." };
     }
   
+    iniciarSesion(username, password) {
+      // Directly compare the provided username and password with the stored values
+      return this.username === username && this.password === password;
+    }
+  
     static obtenerUsuario(usernameOrEmail) {
       const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
       return usuarios.find(

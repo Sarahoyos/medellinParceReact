@@ -1,8 +1,20 @@
-import { Usuario } from "./usuario"
+import { Usuario } from "./usuario";
 
 export function inicioSesion(username, password) {
-  const usuario = new Usuario("", "", "", "");
-  return usuario.login(username, password);
+  const usuarioData = Usuario.obtenerUsuario(username);
+
+  if (usuarioData) {
+    const usuario = new Usuario(
+      usuarioData.fullname,
+      usuarioData.email,
+      usuarioData.username,
+      usuarioData.password
+    );
+
+    return usuario.iniciarSesion(username, password); // Validate credentials
+  }
+
+  return false; // User not found
 }
 
 export function resetIntentos(username) {
@@ -24,4 +36,4 @@ export function resetIntentos(username) {
 
   return false;
 }
-  export { Usuario };
+export { Usuario };

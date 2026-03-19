@@ -1,21 +1,22 @@
 import { useState } from "react";
 import "../styles/login.css";
 import { inicioSesion } from "../services/auth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const result = await inicioSesion(username, password);
-
+    
       if (result) {
         alert("Inicio de sesión exitoso");
+        navigate("/home");
       } else {
         alert("Usuario o contraseña incorrectos");
       }
@@ -30,7 +31,7 @@ export default function Login() {
     <main>
       <div className="login-container">
 
-        <a id="logo" href="/home">
+        <a id="logo" href="./Home.jsx">
           <img src="/logo.png" alt="Logo" />
         </a>
 
