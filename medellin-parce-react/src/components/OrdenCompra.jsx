@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
-import { ordenCompraApi } from "../services/api";
+import { ordenCompraApi, carritoItemsApi, carritosApi } from "../services/api";
 import CartDropdown from "./CartDropdown";
 import "../styles/ordenCompra.css";
 
@@ -28,25 +28,49 @@ const OrdenCompra = () => {
 
     try {
       const fecha = new Date().toISOString().split("T")[0];
-
-      // idCompra máximo 10 caracteres
       const idCompra = `O${Date.now()}`.slice(0, 10);
-      // cliente máximo 10 caracteres
       const cliente = usuario.idCliente.slice(0, 10);
 
+      // Formato: PROD003:2,PROD004:1,PROD002:3
+      const listaProductos = cart
+        .map(item => `${item.idProducto}:${item.quantity}`)
+        .join(",");
+
+      // 1. Crear orden de compra con cantidades y pkorden
       await ordenCompraApi.crear({
         idCompra,
         numeroOrden: idCompra,
         cliente,
-          listaProductos: cart.map(item => item.idProducto).join(","),
+        listaProductos,
         fecha,
         total: Math.round(total),
-
+        mUsuario: { idCliente: usuario.idCliente },
       });
 
-      alert("✅ ¡Compra finalizada parcero! Gracias por tu pedido.");
+      // 2. Eliminar items del carrito en el backend
+      if (carritoId) {
+        for (const item of cart) {
+          try {
+            await carritoItemsApi.eliminar(item.idProducto, carritoId);
+          } catch (err) {
+            console.error(`Error eliminando item ${item.idProducto}:`, err);
+          }
+        }
+
+        // 3. Eliminar el carrito del backend
+        try {
+          await carritosApi.eliminar(carritoId);
+        } catch (err) {
+          console.error("Error eliminando carrito:", err);
+        }
+      }
+
+      // 4. Limpiar carrito local
       clearCart();
+
+      alert("✅ ¡Compra finalizada parcero! Gracias por tu pedido.");
       navigate("/home");
+
     } catch (err) {
       console.error("Error al finalizar compra:", err);
       alert("❌ Error al procesar la compra. Intenta de nuevo.");
@@ -72,8 +96,8 @@ const OrdenCompra = () => {
           <ul>
             <li><a href="/home">INICIO</a></li>
             <li><a href="/productos">PRODUCTOS</a></li>
-            <li><a href="#">BLOG</a></li>
-            <li><a href="#">NOSOTROS</a></li>
+            <li><a href="/blog">BLOG</a></li>
+            <li><a href="/nosotros">NOSOTROS</a></li>
 
             {!usuario && (
               <li id="auth-section">

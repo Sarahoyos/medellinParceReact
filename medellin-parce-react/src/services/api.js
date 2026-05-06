@@ -33,6 +33,15 @@ export const usuariosApi = {
     return res.json();
   },
 
+  // Eliminar usuario (soft delete)
+  eliminar: async (id) => {
+    const res = await fetch(`${BASE_URL}/usuarios/${id}`, {
+      method: "DELETE",
+    });
+    if (!res.ok) throw new Error("Error al eliminar usuario");
+    return res.json();
+  },
+
   // Modificar usuario
   modificar: async (id, usuario) => {
     const res = await fetch(`${BASE_URL}/usuarios/${id}`, {

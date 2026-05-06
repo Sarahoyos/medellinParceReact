@@ -19,6 +19,7 @@ const Perfil = () => {
 
   const [mensaje, setMensaje] = useState(null);
   const [cargando, setCargando] = useState(false);
+  const [confirmarEliminar, setConfirmarEliminar] = useState(false);
 
   useEffect(() => {
     if (usuario) {
@@ -67,7 +68,6 @@ const Perfil = () => {
 
       await usuariosApi.modificar(usuario.idCliente, datosActualizados);
 
-      // Actualizar sesión local con nuevos datos
       const sesionActualizada = { ...usuario, ...datosActualizados };
       localStorage.setItem("sesionActiva", JSON.stringify(sesionActualizada));
 
@@ -77,6 +77,18 @@ const Perfil = () => {
       setMensaje({ tipo: "error", texto: err.message || "Error al actualizar." });
     } finally {
       setCargando(false);
+    }
+  };
+
+  const handleEliminarCuenta = async () => {
+    try {
+      // Soft delete — el backend cambia activo = false
+      await usuariosApi.eliminar(usuario.idCliente);
+      logout();
+      navigate("/login");
+    } catch (err) {
+      setMensaje({ tipo: "error", texto: "Error al eliminar la cuenta." });
+      setConfirmarEliminar(false);
     }
   };
 
@@ -97,8 +109,8 @@ const Perfil = () => {
           <ul>
             <li><a href="/home">INICIO</a></li>
             <li><a href="/productos">PRODUCTOS</a></li>
-            <li><a href="#">BLOG</a></li>
-            <li><a href="#">NOSOTROS</a></li>
+            <li><a href="/blog">BLOG</a></li>
+            <li><a href="/nosotros">NOSOTROS</a></li>
             <li id="perfil-usuario" style={{ display: "block" }}>
               <img src="/imagenes/image copy.png" alt="Icono de usuario" className="icono-usuario" />
               <div className="dropdown-contenido">
@@ -131,46 +143,26 @@ const Perfil = () => {
 
               <div className="perfil-grupo">
                 <label htmlFor="nombreCliente">Nombre completo</label>
-                <input
-                  type="text"
-                  id="nombreCliente"
-                  value={form.nombreCliente}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="text" id="nombreCliente" value={form.nombreCliente}
+                  onChange={handleChange} required />
               </div>
 
               <div className="perfil-grupo">
                 <label htmlFor="correoElectronico">Correo electrónico</label>
-                <input
-                  type="email"
-                  id="correoElectronico"
-                  value={form.correoElectronico}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="email" id="correoElectronico" value={form.correoElectronico}
+                  onChange={handleChange} required />
               </div>
 
               <div className="perfil-grupo">
                 <label htmlFor="direccionEnvio">Dirección de envío</label>
-                <input
-                  type="text"
-                  id="direccionEnvio"
-                  value={form.direccionEnvio}
-                  onChange={handleChange}
-                  placeholder="Tu dirección de envío"
-                />
+                <input type="text" id="direccionEnvio" value={form.direccionEnvio}
+                  onChange={handleChange} placeholder="Tu dirección de envío" />
               </div>
 
               <div className="perfil-grupo">
                 <label htmlFor="numeroTelefono">Número de teléfono</label>
-                <input
-                  type="tel"
-                  id="numeroTelefono"
-                  value={form.numeroTelefono}
-                  onChange={handleChange}
-                  placeholder="Tu número de teléfono"
-                />
+                <input type="tel" id="numeroTelefono" value={form.numeroTelefono}
+                  onChange={handleChange} placeholder="Tu número de teléfono" />
               </div>
             </div>
 
@@ -180,24 +172,14 @@ const Perfil = () => {
 
               <div className="perfil-grupo">
                 <label htmlFor="password">Nueva contraseña</label>
-                <input
-                  type="password"
-                  id="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  placeholder="Mínimo 6 caracteres"
-                />
+                <input type="password" id="password" value={form.password}
+                  onChange={handleChange} placeholder="Mínimo 6 caracteres" />
               </div>
 
               <div className="perfil-grupo">
                 <label htmlFor="confirmPassword">Confirmar contraseña</label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  value={form.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="Repite la contraseña"
-                />
+                <input type="password" id="confirmPassword" value={form.confirmPassword}
+                  onChange={handleChange} placeholder="Repite la contraseña" />
               </div>
             </div>
 
@@ -212,6 +194,37 @@ const Perfil = () => {
             </button>
 
           </form>
+
+          {/* Sección eliminar cuenta */}
+          <div className="perfil-eliminar-seccion">
+            {!confirmarEliminar ? (
+              <button
+                className="perfil-btn-eliminar"
+                onClick={() => setConfirmarEliminar(true)}
+              >
+                Eliminar cuenta
+              </button>
+            ) : (
+              <div className="perfil-confirmar">
+                <p>¿Estás seguro? Esta acción desactivará tu cuenta.</p>
+                <div className="perfil-confirmar-botones">
+                  <button
+                    className="perfil-btn-confirmar-si"
+                    onClick={handleEliminarCuenta}
+                  >
+                    Sí, eliminar
+                  </button>
+                  <button
+                    className="perfil-btn-confirmar-no"
+                    onClick={() => setConfirmarEliminar(false)}
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
         </div>
       </main>
 
