@@ -1,29 +1,29 @@
 import { useState } from "react";
-import "../styles/login.css";
-import { inicioSesion } from "../services/auth";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import "../styles/login.css";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
+  const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [cargando, setCargando] = useState(false);
+
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setCargando(true);
 
     try {
-      const result = await inicioSesion(username, password);
-    
-      if (result) {
-        alert("Inicio de sesión exitoso");
-        navigate("/home");
-      } else {
-        alert("Usuario o contraseña incorrectos");
-      }
-
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error de conexión");
+      await login(correo, password);
+      navigate("/home");
+    } catch (err) {
+      setError(err.message || "Error al iniciar sesión.");
+    } finally {
+      setCargando(false);
     }
   };
 
@@ -31,23 +31,22 @@ export default function Login() {
     <main>
       <div className="login-container">
 
-        <a id="logo" href="./Home.jsx">
+        <a id="logo" href="/home">
           <img src="/logo.png" alt="Logo" />
         </a>
 
         <h1>Bienvenido a Medellin Parce</h1>
 
         <section>
-
           <form onSubmit={handleSubmit}>
 
             <input
-              type="text"
+              type="email"
               id="username"
               required
-              placeholder="Ingrese su usuario"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Correo electrónico"
+              value={correo}
+              onChange={(e) => setCorreo(e.target.value)}
             />
 
             <input
@@ -59,8 +58,14 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            <button type="submit" id="login-button">
-              Iniciar sesión
+            {error && (
+              <p style={{ color: "#cc0000", fontSize: "13px", margin: "4px 0 0" }}>
+                {error}
+              </p>
+            )}
+
+            <button type="submit" id="login-button" disabled={cargando}>
+              {cargando ? "Ingresando..." : "Iniciar sesión"}
             </button>
 
           </form>
@@ -71,9 +76,6 @@ export default function Login() {
               <Link to="/registro">Regístrate aquí</Link>
             </p>
           </div>
-
-          <div id="toast-container-mensaje"></div>
-
         </section>
       </div>
     </main>

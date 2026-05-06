@@ -1,26 +1,29 @@
-import React from "react";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "../styles/home.css";
-// import logo from "./logo.png"; 
-// import mainImg from "./main.jpg"; 
-// import camHombre from "../paginaIntermedia/imagenes/Camiseta hombre.jpg";
-// import camMujer from "../paginaIntermedia/imagenes/Camiseta mujer.jpg";
-// import sweaters from "../paginaIntermedia/imagenes/Sweaters.jpg";
-// import busos from "../paginaIntermedia/imagenes/Busos.jpg";
-// import userIcon from "../modificacionDatos/image copy.png";
 
 const Home = () => {
+  const { usuario, logout } = useAuth();
+  const navigate = useNavigate();
 
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
-
+  const handleDescuento = (e) => {
+    e.preventDefault();
+    e.target.reset();
+  };
 
   return (
     <div>
+
       {/* Header */}
       <header>
         <div className="logo">
           <a href="/home">
-            {/* <img src= alt="Medellín Parce Logo" /> */}
+            <img src="/logo.png" alt="Medellín Parce Logo" />
           </a>
         </div>
         <nav>
@@ -29,16 +32,28 @@ const Home = () => {
             <li><a href="/productos">PRODUCTOS</a></li>
             <li><a href="#">BLOG</a></li>
             <li><a href="#">NOSOTROS</a></li>
-            <li id="auth-section">
 
-            </li>
-            <li id="perfil-usuario">
-              {/* <img src={userIcon} alt="Icono de usuario" className="icono-usuario" /> */}
-              <div className="dropdown-contenido">
-                <a href="/perfil">Mi Perfil</a>
-                <a href="/login">Cerrar Sesión</a>
-              </div>
-            </li>
+            {!usuario && (
+              <li id="auth-section">
+                <Link to="/login">INICIAR SESION</Link>
+              </li>
+            )}
+
+            {usuario && (
+              <li id="perfil-usuario" style={{ display: "block" }}>
+                <img
+                  src="/imagenes/image copy.png"
+                  alt="Icono de usuario"
+                  className="icono-usuario"
+                />
+                <div className="dropdown-contenido">
+                  <a href="/perfil">Mi Perfil</a>
+                  <a onClick={handleLogout} style={{ cursor: "pointer" }}>
+                    Cerrar Sesión
+                  </a>
+                </div>
+              </li>
+            )}
           </ul>
         </nav>
       </header>
@@ -50,7 +65,7 @@ const Home = () => {
 
       {/* Imagen intermedia con overlay */}
       <section className="banner-intermedio">
-        {/* <img src={mainImg} alt="Barrio de Medellín" /> */}
+        <img src="/main.jpg" alt="Barrio de Medellín" />
         <div className="overlay-text">EL DISEÑO MÁS PAISA!!</div>
       </section>
 
@@ -62,17 +77,17 @@ const Home = () => {
       {/* Galería */}
       <section className="galeria">
         <div className="grid-galeria">
-          {/* <img src={camHombre} alt="Camiseta Hombre" />
-          <img src={camMujer} alt="Camiseta Mujer" />
-          <img src={sweaters} alt="Sweaters" />
-          <img src={busos} alt="Busos" /> */}
+          <img src="/imagenes/Camiseta hombre.jpg" alt="Foto 1" />
+          <img src="/imagenes/Camiseta mujer.jpg" alt="Foto 2" />
+          <img src="/imagenes/Sweaters.jpg" alt="Foto 3" />
+          <img src="/imagenes/Busos.jpg" alt="Foto 4" />
         </div>
       </section>
 
       {/* Formulario */}
       <section className="formulario">
-        <form>
-          <h2>Regístrate y obtén un 20% de descuento en tu primera compra!</h2>
+        <form onSubmit={handleDescuento}>
+          <h2>Registrate y obtén un 20% de descuento en tu primera compra!</h2>
           <div className="form-group">
             <label htmlFor="nombre">Nombre</label>
             <input type="text" id="nombre" name="nombre" required />
@@ -98,9 +113,10 @@ const Home = () => {
           <p>Todos los derechos reservados.</p>
         </div>
         <div className="footer-logo">
-          {/* <img src={logo} alt="Logo Medellín Parce" /> */}
+          <img src="/logo.png" alt="Logo Medellín Parce" />
         </div>
       </footer>
+
     </div>
   );
 };

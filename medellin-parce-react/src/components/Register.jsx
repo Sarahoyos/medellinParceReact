@@ -1,57 +1,76 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { usuariosApi } from "../services/api";
 import "../styles/register.css";
-import { Usuario } from "../services/usuario";
 
 export default function Register() {
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    fullname: "",
-    email: "",
-    username: "",
+    idCliente: "",
+    nombreCliente: "",
+    correoElectronico: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    direccionEnvio: "",
+    numeroTelefono: "",
   });
 
-  const [message, setMessage] = useState(null);
+  const [errores, setErrores] = useState({});
+  const [exito, setExito] = useState(false);
+  const [cargando, setCargando] = useState(false);
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.id]: e.target.value
-    });
+    const { id, value } = e.target;
+    setForm((prev) => ({ ...prev, [id]: value }));
+    setErrores((prev) => ({ ...prev, [id]: "" }));
   };
 
-  const handleSubmit = (e) => {
+  const validar = () => {
+    const nuevosErrores = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!form.idCliente.trim())
+      nuevosErrores.idCliente = "El ID es obligatorio.";
+    if (!form.nombreCliente.trim())
+      nuevosErrores.nombreCliente = "El nombre es obligatorio.";
+    if (!emailRegex.test(form.correoElectronico))
+      nuevosErrores.correoElectronico = "El correo no es válido.";
+    if (form.password.length < 6)
+      nuevosErrores.password = "Mínimo 6 caracteres.";
+    if (form.password !== form.confirmPassword)
+      nuevosErrores.confirmPassword = "Las contraseñas no coinciden.";
+
+    return nuevosErrores;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { fullname, email, username, password, confirmPassword } = form;
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setMessage({ type: "error", text: "El correo no es válido." });
+    const erroresValidacion = validar();
+    if (Object.keys(erroresValidacion).length > 0) {
+      setErrores(erroresValidacion);
       return;
     }
 
-    // Password match
-    if (password !== confirmPassword) {
-      setMessage({ type: "error", text: "Las contraseñas no coinciden." });
-      return;
-    }
+    setCargando(true);
 
-    const nuevoUsuario = new Usuario(fullname, email, username, password);
+    try {
+      await usuariosApi.crear({
+        idCliente: form.idCliente,
+        nombreCliente: form.nombreCliente,
+        correoElectronico: form.correoElectronico,
+        password: form.password,
+        direccionEnvio: form.direccionEnvio,
+        numeroTelefono: form.numeroTelefono,
+      });
 
-    const result = nuevoUsuario.registrar();
-
-    setMessage({
-      type: result.success ? "success" : "error",
-      text: result.message
-    });
-
-    if (result.success) {
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 2000);
+      setExito(true);
+      setTimeout(() => navigate("/login"), 2000);
+    } catch (err) {
+      setErrores({ general: err.message });
+    } finally {
+      setCargando(false);
     }
   };
 
@@ -70,81 +89,53 @@ export default function Register() {
         <section>
           <form onSubmit={handleSubmit}>
 
-            <input
-              type="text"
-              id="fullname"
-              placeholder="Nombre completo"
-              value={form.fullname}
-              onChange={handleChange}
-              required
-            />
+            <input type="text" id="idCliente" placeholder="ID de cliente (ej: USR001)"
+              value={form.idCliente} onChange={handleChange} required />
+            {errores.idCliente && <span className="campo-error">{errores.idCliente}</span>}
 
-            <input
-              type="email"
-              id="email"
-              placeholder="Correo electrónico"
-              value={form.email}
-              onChange={handleChange}
-              required
-            />
+            <input type="text" id="nombreCliente" placeholder="Nombre completo"
+              value={form.nombreCliente} onChange={handleChange} required />
+            {errores.nombreCliente && <span className="campo-error">{errores.nombreCliente}</span>}
 
-            <input
-              type="text"
-              id="username"
-              placeholder="Nombre de usuario"
-              value={form.username}
-              onChange={handleChange}
-              required
-            />
+            <input type="email" id="correoElectronico" placeholder="Correo electrónico"
+              value={form.correoElectronico} onChange={handleChange} required />
+            {errores.correoElectronico && <span className="campo-error">{errores.correoElectronico}</span>}
 
-            <input
-              type="password"
-              id="password"
-              placeholder="Contraseña"
-              value={form.password}
-              onChange={handleChange}
-              required
-            />
+            <input type="text" id="direccionEnvio" placeholder="Dirección de envío"
+              value={form.direccionEnvio} onChange={handleChange} />
 
-            <input
-              type="password"
-              id="confirmPassword"
-              placeholder="Confirmar contraseña"
-              value={form.confirmPassword}
-              onChange={handleChange}
-              required
-            />
+            <input type="tel" id="numeroTelefono" placeholder="Número de teléfono"
+              value={form.numeroTelefono} onChange={handleChange} />
 
-            <button type="submit" id="register-button">
-              Registrarse
+            <input type="password" id="password" placeholder="Contraseña"
+              value={form.password} onChange={handleChange} required />
+            {errores.password && <span className="campo-error">{errores.password}</span>}
+
+            <input type="password" id="confirmPassword" placeholder="Confirmar contraseña"
+              value={form.confirmPassword} onChange={handleChange} required />
+            {errores.confirmPassword && <span className="campo-error">{errores.confirmPassword}</span>}
+
+            {errores.general && (
+              <p style={{ color: "#cc0000", fontSize: "13px", margin: "4px 0" }}>
+                {errores.general}
+              </p>
+            )}
+
+            {exito && (
+              <p style={{ color: "#2d6a2d", fontSize: "13px", fontWeight: "bold" }}>
+                ✓ ¡Registro exitoso! Redirigiendo...
+              </p>
+            )}
+
+            <button type="submit" id="register-button" disabled={cargando || exito}>
+              {cargando ? "Registrando..." : "Registrarse"}
             </button>
 
           </form>
 
           <div className="sincuenta">
-            <p>
-              ¿Ya tienes cuenta?{" "}
-              <a href="/login">Inicia sesión aquí</a>
-            </p>
+            <p>¿Ya tienes cuenta? <Link to="/login">Inicia sesión aquí</Link></p>
           </div>
-
-          {/* 🔥 React Toast Message */}
-          {message && (
-            <div
-              style={{
-                padding: "10px",
-                marginTop: "10px",
-                borderRadius: "8px",
-                fontWeight: "bold",
-                backgroundColor:
-                  message.type === "error" ? "#ff4d4d" : "#4CAF50",
-                color: "white"
-              }}
-            >
-              {message.text}
-            </div>
-          )}
-
         </section>
       </div>
     </main>

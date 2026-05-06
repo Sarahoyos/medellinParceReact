@@ -1,562 +1,560 @@
-
 /* Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: 'Arial Black', Arial, sans-serif;
-    color: #000;
-    background: #fff;
-  }
-  
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial Black', Arial, sans-serif;
+  color: #000;
+  background: #fff;
+}
+
+/* Header */
+header {
+  text-align: center;
+  padding: 20px;
+  background: white;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+header .logo img {
+  height: 80px;
+  margin-bottom: 15px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+nav ul li a:hover {
+  border-bottom: 2px solid black;
+}
+
+/* Slogan */
+.slogan {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.slogan h2 {
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+/* Imagen intermedia */
+.banner-intermedio {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.banner-intermedio img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.banner-intermedio .overlay-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 3rem;
+  font-weight: 900;
+  text-align: center;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+  width: 90%;
+  line-height: 1.2;
+}
+
+/* Sub-slogan */
+.sub-slogan {
+  text-align: center;
+  padding: 30px 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.sub-slogan h2 {
+  font-size: 1.8rem;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+/* Catálogo */
+#catalogo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  padding: 40px 20px;
+}
+
+.card {
+  text-align: center;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.card h3 {
+  margin: 15px 0;
+  font-weight: 900;
+}
+
+.card button {
+  background: black;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transition: background 0.3s;
+}
+
+.card button:hover {
+  background: #444;
+}
+
+/* Galería */
+.galeria {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.grid-galeria {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.grid-galeria img {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  height: 300px;
+}
+
+/* Formulario */
+.formulario {
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.formulario form {
+  width: 100%;
+  max-width: 1500px;
+  background: #f9f9f9;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.formulario h2 {
+  margin-bottom: 20px;
+  font-weight: 900;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+button {
+  background: black;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  letter-spacing: 1px;
+  width: 100%;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #444;
+}
+
+/* Footer */
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 40px;
+  border-top: 1px solid #ddd;
+  background: #fff;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+footer .footer-info {
+  font-size: 14px;
+  color: #555;
+}
+
+footer .footer-info p {
+  margin: 5px 0;
+}
+
+footer .footer-info a {
+  color: #555;
+  text-decoration: none;
+}
+
+footer .footer-info a:hover {
+  text-decoration: underline;
+}
+
+footer .footer-logo img {
+  height: 80px;
+}
+
+/* Perfil de usuario */
+#auth-section {
+  display: block;
+}
+
+#perfil-usuario {
+  position: relative;
+  cursor: pointer;
+  display: none;
+}
+
+.icono-usuario {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.dropdown-contenido {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 10;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+.dropdown-contenido a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-contenido a:hover {
+  background-color: #f1f1f1;
+}
+
+#perfil-usuario:hover .dropdown-contenido {
+  display: block;
+}
+
+/* ============================================
+   MEDIA QUERIES - RESPONSIVE
+   ============================================ */
+
+/* Tablets (768px y menores) */
+@media screen and (max-width: 768px) {
   /* Header */
-  header {
-    text-align: center;
-    padding: 20px;
-    background: white;
-    border-bottom: 1px solid #eee;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  }
-  
   header .logo img {
-    height: 80px;
-    margin-bottom: 15px;
+    height: 60px;
+    margin-bottom: 10px;
   }
-  
+
   nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    flex-wrap: wrap;
+    gap: 15px;
+    padding: 0 10px;
   }
-  
+
   nav ul li a {
-    text-decoration: none;
-    color: black;
-    font-weight: bold;
-    letter-spacing: 1px;
+    font-size: 14px;
   }
-  
-  nav ul li a:hover {
-    border-bottom: 2px solid black;
-  }
-  
+
   /* Slogan */
-  .slogan {
-    text-align: center;
-    padding: 30px 20px;
-  }
-  
   .slogan h2 {
-    font-size: 2rem;
-    font-weight: 900;
-    line-height: 1.3;
+    font-size: 1.5rem;
+    padding: 0 15px;
   }
-  
-  /* Imagen intermedia */
-  .banner-intermedio {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-  }
-  
-  .banner-intermedio img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  
+
+  /* Banner */
   .banner-intermedio .overlay-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 3rem;
-    font-weight: 900;
-    text-align: center;
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
-    width: 90%;
-    line-height: 1.2;
+    font-size: 2rem;
+    padding: 0 20px;
   }
-  
+
   /* Sub-slogan */
-  .sub-slogan {
-    text-align: center;
-    padding: 30px 20px;
-    border-bottom: 1px solid #ddd;
-  }
-  
   .sub-slogan h2 {
-    font-size: 1.8rem;
-    font-weight: 900;
-    line-height: 1.3;
+    font-size: 1.4rem;
+    padding: 0 15px;
   }
-  
+
   /* Catálogo */
   #catalogo {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 40px;
-    padding: 40px 20px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    padding: 30px 15px;
   }
-  
-  .card {
-    text-align: center;
-  }
-  
-  .card img {
-    width: 100%;
-    border-radius: 8px;
-  }
-  
-  .card h3 {
-    margin: 15px 0;
-    font-weight: 900;
-  }
-  
-  .card button {
-    background: black;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    cursor: pointer;
-    font-weight: bold;
-    letter-spacing: 1px;
-    transition: background 0.3s;
-  }
-  
-  .card button:hover {
-    background: #444;
-  }
-  
-  /* Galería */
-  .galeria {
-    padding: 40px 20px;
-    text-align: center;
-  }
-  
+
+  /* Galería - mantener 2 columnas pero más pequeñas */
   .grid-galeria {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    max-width: 800px;
-    margin: 0 auto;
+    gap: 15px;
+    max-width: 600px;
   }
-  
+
   .grid-galeria img {
-    width: 100%;
-    border-radius: 8px;
-    object-fit: cover;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    height: 300px;
+    height: 200px;
   }
-  
+
   /* Formulario */
-  .formulario {
-    padding: 40px 20px;
-    display: flex;
-    justify-content: center;
-  }
-  
   .formulario form {
-    width: 100%;
-    max-width: 1500px;
-    background: #f9f9f9;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 20px;
   }
-  
+
   .formulario h2 {
-    margin-bottom: 20px;
-    font-weight: 900;
-    text-align: center;
-    line-height: 1.4;
+    font-size: 1.3rem;
   }
-  
-  .form-group {
-    margin-bottom: 15px;
-    text-align: left;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: bold;
-  }
-  
-  .form-group input,
-  .form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-family: inherit;
-    font-size: 1rem;
-  }
-  
-  button {
-    background: black;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    cursor: pointer;
-    font-weight: bold;
-    letter-spacing: 1px;
-    width: 100%;
-    transition: background 0.3s;
-  }
-  
-  button:hover {
-    background: #444;
-  }
-  
+
   /* Footer */
   footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 30px 40px;
-    border-top: 1px solid #ddd;
-    background: #fff;
-    flex-wrap: wrap;
-    gap: 20px;
+    padding: 20px;
+    flex-direction: column;
+    text-align: center;
   }
-  
-  footer .footer-info {
-    font-size: 14px;
-    color: #555;
-  }
-  
-  footer .footer-info p {
-    margin: 5px 0;
-  }
-  
-  footer .footer-info a {
-    color: #555;
-    text-decoration: none;
-  }
-  
-  footer .footer-info a:hover {
-    text-decoration: underline;
-  }
-  
+
   footer .footer-logo img {
-    height: 80px;
+    height: 60px;
   }
-  
-  /* Perfil de usuario */
-  #auth-section {
+}
+
+/* Móviles (480px y menores) */
+@media screen and (max-width: 480px) {
+  /* Header */
+  header {
+    padding: 15px 10px;
+  }
+
+  header .logo img {
+    height: 50px;
+    margin-bottom: 8px;
+  }
+
+  nav ul {
+    gap: 10px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  nav ul li {
+    width: 100%;
+    text-align: center;
+  }
+
+  nav ul li a {
+    font-size: 13px;
     display: block;
+    padding: 8px 0;
   }
-  
-  #perfil-usuario {
-    position: relative;
-    cursor: pointer;
-    display: none;
+
+  /* Slogan */
+  .slogan {
+    padding: 20px 10px;
   }
-  
-  .icono-usuario {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    object-fit: cover;
-    display: block;
+
+  .slogan h2 {
+    font-size: 1.2rem;
   }
-  
+
+  /* Banner */
+  .banner-intermedio .overlay-text {
+    font-size: 1.3rem;
+    padding: 0 15px;
+  }
+
+  /* Sub-slogan */
+  .sub-slogan {
+    padding: 20px 10px;
+  }
+
+  .sub-slogan h2 {
+    font-size: 1.1rem;
+  }
+
+  /* Catálogo */
+  #catalogo {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px 10px;
+  }
+
+  /* Galería - cambiar a 1 columna */
+  .grid-galeria {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    max-width: 100%;
+  }
+
+  .grid-galeria img {
+    height: 250px;
+  }
+
+  /* Formulario */
+  .formulario {
+    padding: 20px 10px;
+  }
+
+  .formulario form {
+    padding: 15px;
+  }
+
+  .formulario h2 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+  }
+
+  .form-group label {
+    font-size: 14px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+
+  /* Footer */
+  footer {
+    padding: 15px 10px;
+  }
+
+  footer .footer-info {
+    font-size: 12px;
+  }
+
+  footer .footer-logo img {
+    height: 50px;
+  }
+
+  /* Dropdown perfil */
   .dropdown-contenido {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: white;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 10;
-    border-radius: 4px;
-    margin-top: 5px;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 140px;
   }
-  
-  .dropdown-contenido a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
+}
+
+/* Móviles muy pequeños (360px y menores) */
+@media screen and (max-width: 360px) {
+  header .logo img {
+    height: 40px;
   }
-  
-  .dropdown-contenido a:hover {
-    background-color: #f1f1f1;
+
+  nav ul li a {
+    font-size: 12px;
   }
-  
-  #perfil-usuario:hover .dropdown-contenido {
-    display: block;
+
+  .slogan h2 {
+    font-size: 1rem;
   }
-  
-  /* ============================================
-     MEDIA QUERIES - RESPONSIVE
-     ============================================ */
-  
-  /* Tablets (768px y menores) */
-  @media screen and (max-width: 768px) {
-    /* Header */
-    header .logo img {
-      height: 60px;
-      margin-bottom: 10px;
-    }
-  
-    nav ul {
-      gap: 15px;
-      padding: 0 10px;
-    }
-  
-    nav ul li a {
-      font-size: 14px;
-    }
-  
-    /* Slogan */
-    .slogan h2 {
-      font-size: 1.5rem;
-      padding: 0 15px;
-    }
-  
-    /* Banner */
-    .banner-intermedio .overlay-text {
-      font-size: 2rem;
-      padding: 0 20px;
-    }
-  
-    /* Sub-slogan */
-    .sub-slogan h2 {
-      font-size: 1.4rem;
-      padding: 0 15px;
-    }
-  
-    /* Catálogo */
-    #catalogo {
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 25px;
-      padding: 30px 15px;
-    }
-  
-    /* Galería - mantener 2 columnas pero más pequeñas */
-    .grid-galeria {
-      gap: 15px;
-      max-width: 600px;
-    }
-  
-    .grid-galeria img {
-      height: 200px;
-    }
-  
-    /* Formulario */
-    .formulario form {
-      padding: 20px;
-    }
-  
-    .formulario h2 {
-      font-size: 1.3rem;
-    }
-  
-    /* Footer */
-    footer {
-      padding: 20px;
-      flex-direction: column;
-      text-align: center;
-    }
-  
-    footer .footer-logo img {
-      height: 60px;
-    }
+
+  .banner-intermedio .overlay-text {
+    font-size: 1.1rem;
   }
-  
-  /* Móviles (480px y menores) */
-  @media screen and (max-width: 480px) {
-    /* Header */
-    header {
-      padding: 15px 10px;
-    }
-  
-    header .logo img {
-      height: 50px;
-      margin-bottom: 8px;
-    }
-  
-    nav ul {
-      gap: 10px;
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    nav ul li {
-      width: 100%;
-      text-align: center;
-    }
-  
-    nav ul li a {
-      font-size: 13px;
-      display: block;
-      padding: 8px 0;
-    }
-  
-    /* Slogan */
-    .slogan {
-      padding: 20px 10px;
-    }
-  
-    .slogan h2 {
-      font-size: 1.2rem;
-    }
-  
-    /* Banner */
-    .banner-intermedio .overlay-text {
-      font-size: 1.3rem;
-      padding: 0 15px;
-    }
-  
-    /* Sub-slogan */
-    .sub-slogan {
-      padding: 20px 10px;
-    }
-  
-    .sub-slogan h2 {
-      font-size: 1.1rem;
-    }
-  
-    /* Catálogo */
-    #catalogo {
-      grid-template-columns: 1fr;
-      gap: 20px;
-      padding: 20px 10px;
-    }
-  
-    /* Galería - cambiar a 1 columna */
-    .grid-galeria {
-      grid-template-columns: 1fr;
-      gap: 15px;
-      max-width: 100%;
-    }
-  
-    .grid-galeria img {
-      height: 250px;
-    }
-  
-    /* Formulario */
-    .formulario {
-      padding: 20px 10px;
-    }
-  
-    .formulario form {
-      padding: 15px;
-    }
-  
-    .formulario h2 {
-      font-size: 1.1rem;
-      margin-bottom: 15px;
-    }
-  
-    .form-group label {
-      font-size: 14px;
-    }
-  
-    .form-group input,
-    .form-group textarea {
-      padding: 8px;
-      font-size: 14px;
-    }
-  
-    button {
-      padding: 10px 15px;
-      font-size: 14px;
-    }
-  
-    /* Footer */
-    footer {
-      padding: 15px 10px;
-    }
-  
-    footer .footer-info {
-      font-size: 12px;
-    }
-  
-    footer .footer-logo img {
-      height: 50px;
-    }
-  
-    /* Dropdown perfil */
-    .dropdown-contenido {
-      right: auto;
-      left: 50%;
-      transform: translateX(-50%);
-      min-width: 140px;
-    }
+
+  .sub-slogan h2 {
+    font-size: 1rem;
   }
-  
-  /* Móviles muy pequeños (360px y menores) */
-  @media screen and (max-width: 360px) {
-    header .logo img {
-      height: 40px;
-    }
-  
-    nav ul li a {
-      font-size: 12px;
-    }
-  
-    .slogan h2 {
-      font-size: 1rem;
-    }
-  
-    .banner-intermedio .overlay-text {
-      font-size: 1.1rem;
-    }
-  
-    .sub-slogan h2 {
-      font-size: 1rem;
-    }
-  
-    .formulario h2 {
-      font-size: 1rem;
-    }
-  
-    .grid-galeria img {
-      height: 200px;
-    }
-  
-    footer .footer-info {
-      font-size: 11px;
-    }
+
+  .formulario h2 {
+    font-size: 1rem;
   }
-  
-  /* Menú hamburguesa para móviles (opcional) */
-  @media screen and (max-width: 768px) {
-    /* Si quieres agregar un menú hamburguesa más adelante */
-    nav ul {
-      /* Ya está adaptado como columnas en móvil */
-    }
+
+  .grid-galeria img {
+    height: 200px;
   }
-  
-  /* Landscape en móviles */
-  @media screen and (max-height: 500px) and (orientation: landscape) {
-    .banner-intermedio .overlay-text {
-      font-size: 1.5rem;
-    }
-  
-    header .logo img {
-      height: 40px;
-    }
-  
-    nav ul {
-      gap: 8px;
-    }
-  
-    nav ul li a {
-      font-size: 12px;
-      padding: 4px 0;
-    }
+
+  footer .footer-info {
+    font-size: 11px;
   }
-  
+}
+
+/* Menú hamburguesa para móviles (opcional) */
+@media screen and (max-width: 768px) {
+  /* Si quieres agregar un menú hamburguesa más adelante */
+  nav ul {
+    /* Ya está adaptado como columnas en móvil */
+  }
+}
+
+/* Landscape en móviles */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .banner-intermedio .overlay-text {
+    font-size: 1.5rem;
+  }
+
+  header .logo img {
+    height: 40px;
+  }
+
+  nav ul {
+    gap: 8px;
+  }
+
+  nav ul li a {
+    font-size: 12px;
+    padding: 4px 0;
+  }
+}
