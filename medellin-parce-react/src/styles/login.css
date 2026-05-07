@@ -87,6 +87,7 @@ h1 {
     cursor: pointer;
     margin: 20px auto;
     display: block;
+    white-space:nowrap;
 }
 
 #login-button:hover {
