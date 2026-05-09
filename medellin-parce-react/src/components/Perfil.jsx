@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { usuariosApi } from "../services/api";
+import { usuariosApi, ordenCompraApi, productosApi } from "../services/api";
 import "../styles/perfil.css";
 
 const Perfil = () => {
@@ -20,6 +20,9 @@ const Perfil = () => {
   const [mensaje, setMensaje] = useState(null);
   const [cargando, setCargando] = useState(false);
   const [confirmarEliminar, setConfirmarEliminar] = useState(false);
+  const [ordenes, setOrdenes] = useState([]);
+  const [productos, setProductos] = useState({});
+  const [cargandoOrdenes, setCargandoOrdenes] = useState(true);
 
   useEffect(() => {
     if (usuario) {
@@ -31,6 +34,27 @@ const Perfil = () => {
         password: "",
         confirmPassword: "",
       });
+
+      const cargarDatos = async () => {
+        try {
+          // Cargar productos como mapa { idProducto: producto }
+          const listaProductos = await productosApi.getAll();
+          const mapaProductos = {};
+          listaProductos.forEach(p => { mapaProductos[p.idProducto] = p; });
+          setProductos(mapaProductos);
+
+          // Cargar órdenes del usuario
+          const todas = await ordenCompraApi.getAll();
+          const misOrdenes = todas.filter(o => o.cliente === usuario.idCliente);
+          setOrdenes(misOrdenes);
+        } catch (err) {
+          console.error("Error cargando datos:", err);
+        } finally {
+          setCargandoOrdenes(false);
+        }
+      };
+
+      cargarDatos();
     }
   }, [usuario]);
 
@@ -47,14 +71,12 @@ const Perfil = () => {
       setMensaje({ tipo: "error", texto: "Las contraseñas no coinciden." });
       return;
     }
-
     if (form.password && form.password.length < 6) {
-      setMensaje({ tipo: "error", texto: "La contraseña debe tener mínimo 6 caracteres." });
+      setMensaje({ tipo: "error", texto: "Mínimo 6 caracteres." });
       return;
     }
 
     setCargando(true);
-
     try {
       const datosActualizados = {
         idCliente: usuario.idCliente,
@@ -65,12 +87,8 @@ const Perfil = () => {
         password: form.password || usuario.password,
         activo: true,
       };
-
       await usuariosApi.modificar(usuario.idCliente, datosActualizados);
-
-      const sesionActualizada = { ...usuario, ...datosActualizados };
-      localStorage.setItem("sesionActiva", JSON.stringify(sesionActualizada));
-
+      localStorage.setItem("sesionActiva", JSON.stringify({ ...usuario, ...datosActualizados }));
       setMensaje({ tipo: "exito", texto: "✓ Datos actualizados correctamente." });
       setForm((prev) => ({ ...prev, password: "", confirmPassword: "" }));
     } catch (err) {
@@ -82,7 +100,6 @@ const Perfil = () => {
 
   const handleEliminarCuenta = async () => {
     try {
-      // Soft delete — el backend cambia activo = false
       await usuariosApi.eliminar(usuario.idCliente);
       logout();
       navigate("/login");
@@ -92,9 +109,18 @@ const Perfil = () => {
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
+  const handleLogout = () => { logout(); navigate("/login"); };
+
+  const formatearPrecio = (valor) =>
+    new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(valor);
+
+  // Parsear listaProductos "PROD003:1,PROD002:1" → [{ id, cantidad }]
+  const parsearProductos = (listaStr) => {
+    if (!listaStr) return [];
+    return listaStr.split(",").map(item => {
+      const [id, cantidad] = item.split(":");
+      return { id: id?.trim(), cantidad: parseInt(cantidad) || 1 };
+    });
   };
 
   return (
@@ -122,10 +148,10 @@ const Perfil = () => {
         </nav>
       </header>
 
-      {/* Main */}
       <main className="perfil-main">
         <div className="perfil-container">
 
+          {/* Header del perfil */}
           <div className="perfil-header">
             <div className="perfil-avatar">
               {usuario?.nombreCliente?.charAt(0).toUpperCase()}
@@ -140,53 +166,39 @@ const Perfil = () => {
 
             <div className="perfil-seccion">
               <h2>Información personal</h2>
-
               <div className="perfil-grupo">
                 <label htmlFor="nombreCliente">Nombre completo</label>
-                <input type="text" id="nombreCliente" value={form.nombreCliente}
-                  onChange={handleChange} required />
+                <input type="text" id="nombreCliente" value={form.nombreCliente} onChange={handleChange} required />
               </div>
-
               <div className="perfil-grupo">
                 <label htmlFor="correoElectronico">Correo electrónico</label>
-                <input type="email" id="correoElectronico" value={form.correoElectronico}
-                  onChange={handleChange} required />
+                <input type="email" id="correoElectronico" value={form.correoElectronico} onChange={handleChange} required />
               </div>
-
               <div className="perfil-grupo">
                 <label htmlFor="direccionEnvio">Dirección de envío</label>
-                <input type="text" id="direccionEnvio" value={form.direccionEnvio}
-                  onChange={handleChange} placeholder="Tu dirección de envío" />
+                <input type="text" id="direccionEnvio" value={form.direccionEnvio} onChange={handleChange} />
               </div>
-
               <div className="perfil-grupo">
                 <label htmlFor="numeroTelefono">Número de teléfono</label>
-                <input type="tel" id="numeroTelefono" value={form.numeroTelefono}
-                  onChange={handleChange} placeholder="Tu número de teléfono" />
+                <input type="tel" id="numeroTelefono" value={form.numeroTelefono} onChange={handleChange} />
               </div>
             </div>
 
             <div className="perfil-seccion">
               <h2>Cambiar contraseña</h2>
               <p className="perfil-hint">Deja en blanco si no quieres cambiarla</p>
-
               <div className="perfil-grupo">
                 <label htmlFor="password">Nueva contraseña</label>
-                <input type="password" id="password" value={form.password}
-                  onChange={handleChange} placeholder="Mínimo 6 caracteres" />
+                <input type="password" id="password" value={form.password} onChange={handleChange} placeholder="Mínimo 6 caracteres" />
               </div>
-
               <div className="perfil-grupo">
                 <label htmlFor="confirmPassword">Confirmar contraseña</label>
-                <input type="password" id="confirmPassword" value={form.confirmPassword}
-                  onChange={handleChange} placeholder="Repite la contraseña" />
+                <input type="password" id="confirmPassword" value={form.confirmPassword} onChange={handleChange} placeholder="Repite la contraseña" />
               </div>
             </div>
 
             {mensaje && (
-              <div className={`perfil-mensaje ${mensaje.tipo}`}>
-                {mensaje.texto}
-              </div>
+              <div className={`perfil-mensaje ${mensaje.tipo}`}>{mensaje.texto}</div>
             )}
 
             <button type="submit" className="perfil-btn" disabled={cargando}>
@@ -195,31 +207,68 @@ const Perfil = () => {
 
           </form>
 
-          {/* Sección eliminar cuenta */}
+          {/* Historial de compras */}
+          <div className="perfil-historial">
+            <h2>Mis compras</h2>
+
+            {cargandoOrdenes && <p className="perfil-hint">Cargando historial...</p>}
+
+            {!cargandoOrdenes && ordenes.length === 0 && (
+              <p className="perfil-hint">Aún no has realizado compras.</p>
+            )}
+
+            {ordenes.map((orden) => {
+              const items = parsearProductos(orden.listaProductos);
+              return (
+                <div className="perfil-orden" key={orden.idCompra}>
+
+                  <div className="perfil-orden-header">
+                    <span className="perfil-orden-id">#{orden.idCompra}</span>
+                    <span className="perfil-orden-total">{formatearPrecio(orden.total)}</span>
+                  </div>
+
+                  <div className="perfil-orden-fechas">
+                    <p>📅 Compra: <strong>{orden.fecha}</strong></p>
+                    {orden.fechaEntrega && (
+                      <p>🚚 Entrega estimada: <strong>{orden.fechaEntrega}</strong></p>
+                    )}
+                  </div>
+
+                  {/* Fotos de productos */}
+                  <div className="perfil-orden-productos">
+                    {items.map(({ id, cantidad }) => {
+                      const prod = productos[id];
+                      return (
+                        <div className="perfil-orden-producto" key={id}>
+                          <img
+                            src={prod ? `/imagenes/${prod.imagen}` : "/logo.png"}
+                            alt={prod?.nombreProducto || id}
+                            onError={(e) => { e.target.src = "/logo.png"; }}
+                          />
+                          <p className="perfil-prod-nombre">{prod?.nombreProducto || id}</p>
+                          <p className="perfil-prod-cantidad">x{cantidad}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Eliminar cuenta */}
           <div className="perfil-eliminar-seccion">
             {!confirmarEliminar ? (
-              <button
-                className="perfil-btn-eliminar"
-                onClick={() => setConfirmarEliminar(true)}
-              >
+              <button className="perfil-btn-eliminar" onClick={() => setConfirmarEliminar(true)}>
                 Eliminar cuenta
               </button>
             ) : (
               <div className="perfil-confirmar">
                 <p>¿Estás seguro? Esta acción desactivará tu cuenta.</p>
                 <div className="perfil-confirmar-botones">
-                  <button
-                    className="perfil-btn-confirmar-si"
-                    onClick={handleEliminarCuenta}
-                  >
-                    Sí, eliminar
-                  </button>
-                  <button
-                    className="perfil-btn-confirmar-no"
-                    onClick={() => setConfirmarEliminar(false)}
-                  >
-                    Cancelar
-                  </button>
+                  <button className="perfil-btn-confirmar-si" onClick={handleEliminarCuenta}>Sí, eliminar</button>
+                  <button className="perfil-btn-confirmar-no" onClick={() => setConfirmarEliminar(false)}>Cancelar</button>
                 </div>
               </div>
             )}
@@ -236,9 +285,7 @@ const Perfil = () => {
           <p>Email: <a href="mailto:info.medellinparce@gmail.com">info.medellinparce@gmail.com</a></p>
           <p>Todos los derechos reservados.</p>
         </div>
-        <div className="footer-logo">
-          <img src="/logo.png" alt="Logo Medellín Parce" />
-        </div>
+        <div className="footer-logo"><img src="/logo.png" alt="Logo Medellín Parce" /></div>
       </footer>
 
     </div>

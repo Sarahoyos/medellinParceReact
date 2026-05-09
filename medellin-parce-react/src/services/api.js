@@ -5,21 +5,18 @@ const BASE_URL = "http://localhost:8080";
 // ============================================
 export const usuariosApi = {
 
-  // Obtener todos los usuarios
   getAll: async () => {
     const res = await fetch(`${BASE_URL}/usuarios`);
     if (!res.ok) throw new Error("Error al obtener usuarios");
     return res.json();
   },
 
-  // Obtener usuario por ID
   getById: async (id) => {
     const res = await fetch(`${BASE_URL}/usuarios/${id}`);
     if (!res.ok) throw new Error("Usuario no encontrado");
     return res.json();
   },
 
-  // Crear usuario (registro)
   crear: async (usuario) => {
     const res = await fetch(`${BASE_URL}/usuarios`, {
       method: "POST",
@@ -33,16 +30,6 @@ export const usuariosApi = {
     return res.json();
   },
 
-  // Eliminar usuario (soft delete)
-  eliminar: async (id) => {
-    const res = await fetch(`${BASE_URL}/usuarios/${id}`, {
-      method: "DELETE",
-    });
-    if (!res.ok) throw new Error("Error al eliminar usuario");
-    return res.json();
-  },
-
-  // Modificar usuario
   modificar: async (id, usuario) => {
     const res = await fetch(`${BASE_URL}/usuarios/${id}`, {
       method: "PUT",
@@ -53,7 +40,16 @@ export const usuariosApi = {
     return res.json();
   },
 
-  // Login — busca entre todos los usuarios y valida credenciales
+  // Soft delete
+  eliminar: async (id) => {
+    const res = await fetch(`${BASE_URL}/usuarios/${id}`, {
+      method: "DELETE",
+    });
+    if (!res.ok) throw new Error("Error al eliminar usuario");
+    return res.json();
+  },
+
+  // Login — filtra por correo + password
   login: async (correoElectronico, password) => {
     const usuarios = await usuariosApi.getAll();
     const usuario = usuarios.find(
@@ -72,21 +68,18 @@ export const usuariosApi = {
 // ============================================
 export const productosApi = {
 
-  // Obtener todos los productos
   getAll: async () => {
     const res = await fetch(`${BASE_URL}/productos`);
     if (!res.ok) throw new Error("Error al obtener productos");
     return res.json();
   },
 
-  // Obtener producto por ID
   getById: async (id) => {
     const res = await fetch(`${BASE_URL}/productos/${id}`);
     if (!res.ok) throw new Error("Producto no encontrado");
     return res.json();
   },
 
-  // Crear producto
   crear: async (producto) => {
     const res = await fetch(`${BASE_URL}/productos`, {
       method: "POST",
@@ -96,6 +89,24 @@ export const productosApi = {
     if (!res.ok) throw new Error("Error al crear producto");
     return res.json();
   },
+
+  modificar: async (id, producto) => {
+    const res = await fetch(`${BASE_URL}/productos/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(producto),
+    });
+    if (!res.ok) throw new Error("Error al modificar producto");
+    return res.json();
+  },
+
+  eliminar: async (id) => {
+    const res = await fetch(`${BASE_URL}/productos/${id}`, {
+      method: "DELETE",
+    });
+    if (!res.ok) throw new Error("Error al eliminar producto");
+    return res.json();
+  },
 };
 
 // ============================================
@@ -103,14 +114,12 @@ export const productosApi = {
 // ============================================
 export const carritosApi = {
 
-  // Obtener todos los carritos
   getAll: async () => {
     const res = await fetch(`${BASE_URL}/carritos`);
     if (!res.ok) throw new Error("Error al obtener carritos");
     return res.json();
   },
 
-  // Crear carrito
   crear: async (carrito) => {
     const res = await fetch(`${BASE_URL}/carritos`, {
       method: "POST",
@@ -121,7 +130,6 @@ export const carritosApi = {
     return res.json();
   },
 
-  // Modificar carrito
   modificar: async (id, carrito) => {
     const res = await fetch(`${BASE_URL}/carritos/${id}`, {
       method: "PUT",
@@ -132,7 +140,6 @@ export const carritosApi = {
     return res.json();
   },
 
-  // Eliminar carrito
   eliminar: async (id) => {
     const res = await fetch(`${BASE_URL}/carritos/${id}`, {
       method: "DELETE",
@@ -147,7 +154,6 @@ export const carritosApi = {
 // ============================================
 export const carritoItemsApi = {
 
-  // Crear item en carrito
   crear: async (item) => {
     const res = await fetch(`${BASE_URL}/carritoItems`, {
       method: "POST",
@@ -158,7 +164,6 @@ export const carritoItemsApi = {
     return res.json();
   },
 
-  // Modificar item
   modificar: async (idProducto, idCarrito, item) => {
     const res = await fetch(`${BASE_URL}/carritoItems/${idProducto}/${idCarrito}`, {
       method: "PUT",
@@ -169,7 +174,6 @@ export const carritoItemsApi = {
     return res.json();
   },
 
-  // Eliminar item
   eliminar: async (idProducto, idCarrito) => {
     const res = await fetch(`${BASE_URL}/carritoItems/${idProducto}/${idCarrito}`, {
       method: "DELETE",
@@ -184,7 +188,12 @@ export const carritoItemsApi = {
 // ============================================
 export const ordenCompraApi = {
 
-  // Crear orden
+  getAll: async () => {
+    const res = await fetch(`${BASE_URL}/ordenCompra`);
+    if (!res.ok) throw new Error("Error al obtener órdenes");
+    return res.json();
+  },
+
   crear: async (orden) => {
     const res = await fetch(`${BASE_URL}/ordenCompra`, {
       method: "POST",
@@ -192,13 +201,6 @@ export const ordenCompraApi = {
       body: JSON.stringify(orden),
     });
     if (!res.ok) throw new Error("Error al crear orden de compra");
-    return res.json();
-  },
-
-  // Obtener todas las órdenes
-  getAll: async () => {
-    const res = await fetch(`${BASE_URL}/ordenCompra`);
-    if (!res.ok) throw new Error("Error al obtener órdenes");
     return res.json();
   },
 };

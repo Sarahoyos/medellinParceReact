@@ -374,3 +374,113 @@ footer .footer-logo img { height: 80px; }
 .perfil-btn-confirmar-no:hover {
   background: #4a564e;
 }
+
+/* Historial de compras */
+.perfil-historial {
+  padding: 20px 30px;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.perfil-historial h2 {
+  font-size: 0.95rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #000;
+  margin: 0 0 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #000;
+  font-family: 'Arial Black', Arial, sans-serif;
+}
+
+.perfil-orden {
+  background: rgb(202, 206, 204);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 12px;
+}
+
+.perfil-orden-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.perfil-orden-id {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  color: #000;
+}
+
+.perfil-orden-total {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 900;
+  color: #000;
+}
+
+.perfil-orden-detalle {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.perfil-orden-detalle p {
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  color: #333;
+  font-weight: normal;
+}
+
+/* Fotos de productos en historial */
+.perfil-orden-fechas {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.perfil-orden-fechas p {
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  color: #333;
+  font-weight: normal;
+}
+
+.perfil-orden-productos {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.perfil-orden-producto {
+  text-align: center;
+  width: 80px;
+}
+
+.perfil-orden-producto img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.perfil-prod-nombre {
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  color: #333;
+  margin-top: 4px;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.perfil-prod-cantidad {
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  color: #666;
+  margin-top: 2px;
+}

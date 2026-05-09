@@ -1,0 +1,473 @@
+/* ============================================
+   DASHBOARD ADMIN — Medellín Parce
+   ============================================ */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.dash-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  color: #888;
+}
+
+/* Layout */
+.dash-wrapper {
+  display: flex;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+}
+
+/* Sidebar */
+.dash-sidebar {
+  width: 220px;
+  background: #000;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  position: fixed;
+  height: 100vh;
+  top: 0;
+  left: 0;
+}
+
+.dash-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px;
+  border-bottom: 1px solid #333;
+  margin-bottom: 20px;
+}
+
+.dash-logo img {
+  height: 50px;
+  filter: invert(1);
+}
+
+.dash-logo span {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: #aaa;
+}
+
+.dash-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 12px;
+  flex: 1;
+}
+
+.dash-nav-btn {
+  background: transparent;
+  border: none;
+  color: #aaa;
+  text-align: left;
+  padding: 12px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  transition: background 0.2s, color 0.2s;
+  width: 100%;
+}
+
+.dash-nav-btn:hover {
+  background: #222;
+  color: white;
+}
+
+.dash-nav-btn.activo {
+  background: #333;
+  color: white;
+  font-weight: bold;
+}
+
+.dash-logout {
+  margin: 12px;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid #444;
+  color: #aaa;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: Arial, sans-serif;
+  transition: background 0.2s;
+}
+
+.dash-logout:hover {
+  background: #222;
+  color: white;
+}
+
+/* Main */
+.dash-main {
+  margin-left: 220px;
+  padding: 30px;
+  flex: 1;
+  min-height: 100vh;
+  overflow-y: visible;
+}
+
+.dash-titulo {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #000;
+  margin-bottom: 24px;
+}
+
+/* Cards resumen */
+.dash-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.dash-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.dash-card-valor {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #000;
+  margin-bottom: 6px;
+}
+
+.dash-card-label {
+  font-size: 12px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Tabla */
+.dash-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  font-size: 13px;
+}
+
+.dash-tabla thead {
+  background: #000;
+  color: white;
+}
+
+.dash-tabla th {
+  padding: 12px 16px;
+  text-align: left;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.dash-tabla td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #333;
+}
+
+.dash-tabla tbody tr:hover {
+  background: #fafafa;
+}
+
+/* Badge estado */
+.dash-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.dash-badge.activo {
+  background: #d4edda;
+  color: #155724;
+}
+
+.dash-badge.inactivo {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Botones acción */
+.dash-btn-accion {
+  padding: 5px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+}
+
+.dash-btn-accion.activar {
+  background: #000;
+  color: white;
+}
+
+.dash-btn-accion.activar:hover { background: #333; }
+
+.dash-btn-accion.desactivar {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.dash-btn-accion.desactivar:hover { background: #f5c6cb; }
+
+/* Form producto */
+.dash-form-container {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.dash-form-container h2 {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
+  margin-bottom: 16px;
+  color: #000;
+}
+
+.dash-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.dash-form-full {
+  grid-column: 1 / -1;
+}
+
+.dash-form-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.dash-form-grupo label {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #555;
+}
+
+.dash-form-grupo input {
+  padding: 9px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  outline: none;
+}
+
+.dash-form-grupo input:focus { border-color: #000; }
+.dash-form-grupo input:disabled { background: #f5f5f5; color: #999; }
+
+.dash-form-botones {
+  display: flex;
+  gap: 10px;
+}
+
+.dash-btn-guardar {
+  padding: 10px 24px;
+  background: #000;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+
+.dash-btn-guardar:hover { background: #333; }
+
+.dash-btn-cancelar {
+  padding: 10px 24px;
+  background: transparent;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* Mensajes */
+.dash-mensaje {
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  margin-bottom: 14px;
+  font-family: Arial, sans-serif;
+}
+
+.dash-mensaje.exito {
+  background: #d4edda;
+  border-left: 3px solid #38a169;
+  color: #155724;
+}
+
+.dash-mensaje.error {
+  background: #f8d7da;
+  border-left: 3px solid #e53e3e;
+  color: #721c24;
+}
+
+/* Analítica — barras */
+.dash-analitica-seccion {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.dash-analitica-seccion h2 {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+.dash-barras {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  height: 180px;
+  padding-bottom: 8px;
+}
+
+.dash-barra-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.dash-barra-contenedor {
+  width: 100%;
+  height: 140px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.dash-barra {
+  width: 100%;
+  background: #000;
+  border-radius: 4px 4px 0 0;
+  min-height: 4px;
+  transition: height 0.3s;
+}
+
+.dash-barra-label {
+  font-size: 11px;
+  color: #555;
+  margin-top: 6px;
+  font-family: Arial, sans-serif;
+}
+
+.dash-barra-valor {
+  font-size: 10px;
+  color: #888;
+  margin-top: 2px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dash-sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 10px;
+  }
+
+  .dash-main {
+    margin-left: 0;
+    padding: 16px;
+  }
+
+  .dash-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0;
+  }
+
+  .dash-barras {
+    height: 120px;
+  }
+
+  .dash-barra-contenedor {
+    height: 90px;
+  }
+}
+
+/* Modal confirmación */
+.dash-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.dash-modal {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.dash-modal p {
+  font-size: 15px;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.dash-modal-botones {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}

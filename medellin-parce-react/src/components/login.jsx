@@ -12,20 +12,24 @@ export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setCargando(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
+  setCargando(true);
 
-    try {
-      await login(correo, password);
+  try {
+    const result = await login(correo, password);
+    if (result.rol === "admin") {
+      navigate("/dashboard");
+    } else {
       navigate("/home");
-    } catch (err) {
-      setError(err.message || "Error al iniciar sesión.");
-    } finally {
-      setCargando(false);
     }
-  };
+  } catch (err) {
+    setError(err.message || "Error al iniciar sesión.");
+  } finally {
+    setCargando(false);
+  }
+};
 
   return (
     <main>

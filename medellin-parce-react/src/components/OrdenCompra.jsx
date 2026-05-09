@@ -28,21 +28,24 @@ const OrdenCompra = () => {
 
     try {
       const fecha = new Date().toISOString().split("T")[0];
+
+      // Fecha estimada de entrega: +10 días
+      const fechaEntregaDate = new Date();
+      fechaEntregaDate.setDate(fechaEntregaDate.getDate() + 10);
+      const fechaEntrega = fechaEntregaDate.toISOString().split("T")[0];
+
       const idCompra = `O${Date.now()}`.slice(0, 10);
       const cliente = usuario.idCliente.slice(0, 10);
+      const listaProductos = cart.map(item => `${item.idProducto}:${item.quantity}`).join(",");
 
-      // Formato: PROD003:2,PROD004:1,PROD002:3
-      const listaProductos = cart
-        .map(item => `${item.idProducto}:${item.quantity}`)
-        .join(",");
-
-      // 1. Crear orden de compra con cantidades y pkorden
+      // 1. Crear orden con fechaEntrega
       await ordenCompraApi.crear({
         idCompra,
         numeroOrden: idCompra,
         cliente,
         listaProductos,
         fecha,
+        fechaEntrega,
         total: Math.round(total),
         mUsuario: { idCliente: usuario.idCliente },
       });
@@ -56,8 +59,6 @@ const OrdenCompra = () => {
             console.error(`Error eliminando item ${item.idProducto}:`, err);
           }
         }
-
-        // 3. Eliminar el carrito del backend
         try {
           await carritosApi.eliminar(carritoId);
         } catch (err) {
@@ -65,11 +66,11 @@ const OrdenCompra = () => {
         }
       }
 
-      // 4. Limpiar carrito local
+      // 3. Limpiar carrito local
       clearCart();
 
-      alert("✅ ¡Compra finalizada parcero! Gracias por tu pedido.");
-      navigate("/home");
+      alert(`✅ ¡Compra finalizada parcero! Tu pedido llega el ${fechaEntrega}.`);
+      navigate("/perfil");
 
     } catch (err) {
       console.error("Error al finalizar compra:", err);

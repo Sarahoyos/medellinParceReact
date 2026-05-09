@@ -13,6 +13,8 @@ import EnDesarrollo from "./components/EnDesarrollo";
 import ProductosHombre from "./components/ProductosHombre";
 import ProductosSweaters from "./components/ProductosSweaters";
 import ProductosChompas from "./components/ProductosChompas";
+import AdminRoute from "./components/AdminRoute";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
@@ -37,6 +39,7 @@ function App() {
             <Route path="/productos/chompas" element={<PrivateRoute><ProductosChompas /></PrivateRoute>} />
 
             <Route path="*" element={<Navigate to="/login" replace />} />
+            <Route path="/dashboard" element={<AdminRoute> <Dashboard /> </AdminRoute>}/>
           </Routes>
         </BrowserRouter>
       </CartProvider>
