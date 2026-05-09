@@ -18,10 +18,7 @@ const ProductosChompas = () => {
     const cargarProductos = async () => {
       try {
         const data = await productosApi.getAll();
-        const chompas = data.filter((p) =>
-          p.nombreProducto?.toLowerCase().includes("chompa") ||
-          p.descripcion?.toLowerCase().includes("chompa")
-        );
+        const chompas = data.filter((p) => p.categoria === "chompas");
         setProductos(chompas);
       } catch (err) {
         setError("No se pudieron cargar los productos.");

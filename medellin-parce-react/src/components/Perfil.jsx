@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { usuariosApi, ordenCompraApi, productosApi } from "../services/api";
+import { usuariosApi, ordenCompraApi, productosApi, carritosApi } from "../services/api";
 import "../styles/perfil.css";
 
 const Perfil = () => {
@@ -23,39 +23,53 @@ const Perfil = () => {
   const [ordenes, setOrdenes] = useState([]);
   const [productos, setProductos] = useState({});
   const [cargandoOrdenes, setCargandoOrdenes] = useState(true);
+  const [carritoActivo, setCarritoActivo] = useState(null);
 
   useEffect(() => {
-    if (usuario) {
-      setForm({
-        nombreCliente: usuario.nombreCliente || "",
-        correoElectronico: usuario.correoElectronico || "",
-        direccionEnvio: usuario.direccionEnvio || "",
-        numeroTelefono: usuario.numeroTelefono || "",
-        password: "",
-        confirmPassword: "",
-      });
+    if (!usuario) return;
 
-      const cargarDatos = async () => {
+    setForm({
+      nombreCliente: usuario.nombreCliente || "",
+      correoElectronico: usuario.correoElectronico || "",
+      direccionEnvio: usuario.direccionEnvio || "",
+      numeroTelefono: usuario.numeroTelefono || "",
+      password: "",
+      confirmPassword: "",
+    });
+
+    const cargarDatos = async () => {
+      try {
+        // 1. Productos como mapa
+        const listaProductos = await productosApi.getAll();
+        const mapaProductos = {};
+        listaProductos.forEach(p => { mapaProductos[p.idProducto] = p; });
+        setProductos(mapaProductos);
+
+        // 2. Órdenes del usuario
+        const todas = await ordenCompraApi.getAll();
+        const misOrdenes = todas.filter(o => o.cliente === usuario.idCliente);
+        setOrdenes(misOrdenes);
+
+        // 3. Carrito activo del usuario
         try {
-          // Cargar productos como mapa { idProducto: producto }
-          const listaProductos = await productosApi.getAll();
-          const mapaProductos = {};
-          listaProductos.forEach(p => { mapaProductos[p.idProducto] = p; });
-          setProductos(mapaProductos);
-
-          // Cargar órdenes del usuario
-          const todas = await ordenCompraApi.getAll();
-          const misOrdenes = todas.filter(o => o.cliente === usuario.idCliente);
-          setOrdenes(misOrdenes);
+          const todosCarritos = await carritosApi.getAll();
+          const miCarrito = todosCarritos.find(
+            c => c.mUsuario?.idCliente === usuario.idCliente
+          );
+          setCarritoActivo(miCarrito || null);
         } catch (err) {
-          console.error("Error cargando datos:", err);
-        } finally {
-          setCargandoOrdenes(false);
+          console.error("Error cargando carrito:", err);
+          setCarritoActivo(null);
         }
-      };
 
-      cargarDatos();
-    }
+      } catch (err) {
+        console.error("Error cargando datos:", err);
+      } finally {
+        setCargandoOrdenes(false);
+      }
+    };
+
+    cargarDatos();
   }, [usuario]);
 
   const handleChange = (e) => {
@@ -66,7 +80,6 @@ const Perfil = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (form.password && form.password !== form.confirmPassword) {
       setMensaje({ tipo: "error", texto: "Las contraseñas no coinciden." });
       return;
@@ -75,7 +88,6 @@ const Perfil = () => {
       setMensaje({ tipo: "error", texto: "Mínimo 6 caracteres." });
       return;
     }
-
     setCargando(true);
     try {
       const datosActualizados = {
@@ -114,7 +126,6 @@ const Perfil = () => {
   const formatearPrecio = (valor) =>
     new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(valor);
 
-  // Parsear listaProductos "PROD003:1,PROD002:1" → [{ id, cantidad }]
   const parsearProductos = (listaStr) => {
     if (!listaStr) return [];
     return listaStr.split(",").map(item => {
@@ -163,7 +174,6 @@ const Perfil = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="perfil-form">
-
             <div className="perfil-seccion">
               <h2>Información personal</h2>
               <div className="perfil-grupo">
@@ -204,8 +214,41 @@ const Perfil = () => {
             <button type="submit" className="perfil-btn" disabled={cargando}>
               {cargando ? "Guardando..." : "Guardar cambios"}
             </button>
-
           </form>
+
+          {/* Carrito activo */}
+          {carritoActivo && carritoActivo.mCarritoItems?.length > 0 && (
+            <div className="perfil-historial">
+              <h2>🛒 Carrito pendiente</h2>
+              <p className="perfil-hint">Tienes productos en tu carrito que no has comprado.</p>
+              <div className="perfil-orden" style={{ background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.4)" }}>
+                <div className="perfil-orden-fechas">
+                  <p>📅 Agregado el: <strong>{carritoActivo.fecha}</strong></p>
+                </div>
+                <div className="perfil-orden-productos">
+                  {carritoActivo.mCarritoItems.map(item => {
+                    const prod = productos[item.id?.idProductoFK];
+                    return (
+                      <div className="perfil-orden-producto" key={item.id?.idProductoFK}>
+                        <img
+                          src={prod ? `/imagenes/${prod.imagen}` : "/logo.png"}
+                          alt={prod?.nombreProducto || item.id?.idProductoFK}
+                          onError={(e) => { e.target.src = "/logo.png"; }}
+                        />
+                        <p className="perfil-prod-nombre">{prod?.nombreProducto || item.id?.idProductoFK}</p>
+                        <p className="perfil-prod-cantidad">x{item.cantidad}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div style={{ marginTop: "14px" }}>
+                  <a href="/productos" style={{ background: "#000", color: "white", padding: "10px 20px", borderRadius: "4px", textDecoration: "none", fontSize: "13px", fontFamily: "'Arial Black', Arial, sans-serif", fontWeight: "900", letterSpacing: "1px" }}>
+                    Ir a comprar
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Historial de compras */}
           <div className="perfil-historial">
@@ -221,20 +264,16 @@ const Perfil = () => {
               const items = parsearProductos(orden.listaProductos);
               return (
                 <div className="perfil-orden" key={orden.idCompra}>
-
                   <div className="perfil-orden-header">
                     <span className="perfil-orden-id">#{orden.idCompra}</span>
                     <span className="perfil-orden-total">{formatearPrecio(orden.total)}</span>
                   </div>
-
                   <div className="perfil-orden-fechas">
                     <p>📅 Compra: <strong>{orden.fecha}</strong></p>
                     {orden.fechaEntrega && (
                       <p>🚚 Entrega estimada: <strong>{orden.fechaEntrega}</strong></p>
                     )}
                   </div>
-
-                  {/* Fotos de productos */}
                   <div className="perfil-orden-productos">
                     {items.map(({ id, cantidad }) => {
                       const prod = productos[id];
@@ -251,7 +290,6 @@ const Perfil = () => {
                       );
                     })}
                   </div>
-
                 </div>
               );
             })}

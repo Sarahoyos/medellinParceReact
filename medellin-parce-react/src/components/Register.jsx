@@ -63,6 +63,7 @@ export default function Register() {
         password: form.password,
         direccionEnvio: form.direccionEnvio,
         numeroTelefono: form.numeroTelefono,
+        rol:"usuario"
       });
 
       setExito(true);

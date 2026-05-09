@@ -15,12 +15,23 @@ import ProductosSweaters from "./components/ProductosSweaters";
 import ProductosChompas from "./components/ProductosChompas";
 import AdminRoute from "./components/AdminRoute";
 import Dashboard from "./components/Dashboard";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
 
 function App() {
   return (
     <AuthProvider>
       <CartProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Navigate to="/login" replace />} />
 

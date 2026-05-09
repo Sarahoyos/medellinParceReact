@@ -49,6 +49,13 @@ export const usuariosApi = {
     return res.json();
   },
 
+  // Obtener todos los usuarios incluyendo inactivos
+  getAllTodos: async () => {
+    const res = await fetch(`${BASE_URL}/usuarios/todos`);
+    if (!res.ok) throw new Error("Error al obtener usuarios");
+    return res.json();
+  },
+
   // Login — filtra por correo + password
   login: async (correoElectronico, password) => {
     const usuarios = await usuariosApi.getAll();

@@ -18,10 +18,7 @@ const ProductosSweaters = () => {
     const cargarProductos = async () => {
       try {
         const data = await productosApi.getAll();
-        const sweaters = data.filter((p) =>
-          p.nombreProducto?.toLowerCase().includes("sweater") ||
-          p.descripcion?.toLowerCase().includes("sweater")
-        );
+        const sweaters = data.filter((p) => p.categoria === "sweaters");
         setProductos(sweaters);
       } catch (err) {
         setError("No se pudieron cargar los productos.");

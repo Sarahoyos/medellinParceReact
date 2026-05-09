@@ -19,8 +19,7 @@ const ProductosHombre = () => {
       try {
         const data = await productosApi.getAll();
         const hombre = data.filter((p) =>
-          p.nombreProducto?.toLowerCase().includes("hombre") ||
-          p.descripcion?.toLowerCase().includes("hombre")
+          p.categoria === "hombre"
         );
         setProductos(hombre);
       } catch (err) {
